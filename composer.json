@@ -1,5 +1,5 @@
 {
-    "name": "antonfiadotau/two-factor-bundle",
+    "name": "scheb/two-factor-bundle",
     "type": "symfony-bundle",
     "description": "Provides two-factor authentication for Symfony applications",
     "keywords": ["two-factor", "two-step", "authentication", "security", "symfony"],
@@ -38,7 +38,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Antonfiadotau\\TwoFactorBundle\\": ""
+            "Scheb\\TwoFactorBundle\\": ""
         }
     },
     "config": {
