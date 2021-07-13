@@ -29,6 +29,7 @@
 			<argument type="service" id="scheb_two_factor.security.email.code_generator" />
 			<argument type="service" id="scheb_two_factor.security.email.code_validator" />
 			<argument type="service" id="scheb_two_factor.security.email.renderer" />
+			<argument type="service" id="event_dispatcher" />
 			<argument>%scheb_two_factor.parameter_names.auth_code%</argument>
 		</service>
         <service id="scheb_two_factor.security.email.renderer" class="%scheb_two_factor.security.renderer.class%" lazy="true">

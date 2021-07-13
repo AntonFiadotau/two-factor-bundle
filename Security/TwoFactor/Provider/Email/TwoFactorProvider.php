@@ -4,10 +4,13 @@ namespace Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email;
 
 use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\AuthenticationContextInterface;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
+use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Generator\CodeGeneratorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\Email\Validation\CodeValidatorInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Provider\TwoFactorProviderInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Renderer;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,13 +35,18 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      * @var string
      */
     private $authCodeParameter;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
-    public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator, Renderer $renderer, $authCodeParameter)
+    public function __construct(CodeGeneratorInterface $codeGenerator, CodeValidatorInterface $authenticator, Renderer $renderer, EventDispatcherInterface $eventDispatcher, $authCodeParameter)
     {
         $this->codeGenerator = $codeGenerator;
         $this->authenticator = $authenticator;
         $this->renderer = $renderer;
         $this->authCodeParameter = $authCodeParameter;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -71,6 +79,7 @@ class TwoFactorProvider implements TwoFactorProviderInterface
      */
     public function requestAuthenticationCode(AuthenticationContextInterface $context)
     {
+        $this->eventDispatcher->dispatch(TwoFactorAuthenticationEvents::ATTEMPT, new TwoFactorAuthenticationEvent());
         $user = $context->getUser();
         $request = $context->getRequest();
         $session = $context->getSession();
